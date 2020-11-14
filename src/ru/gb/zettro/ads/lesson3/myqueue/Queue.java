@@ -7,6 +7,7 @@ public interface Queue<E> {
     E remove();
 
     E peekHead();
+    E peekTail();
 
     int size();
 

@@ -2,20 +2,15 @@ package ru.gb.zettro.ads.lesson3.myqueue;
 
 public class QueueImpl<E> implements Queue<E> {
 
-    private static final int DEFAULT_TAIL = -1;
-    private static final int DEFAULT_HEAD = 0;
-
     protected E[] data;
     protected int size;
 
-    private int tail;
-    private int head;
+    protected int tail;
+    protected int head;
 
     @SuppressWarnings("unchecked")
     public QueueImpl(int maxSize) {
         this.data = (E[]) new Object[maxSize];
-        this.head = DEFAULT_HEAD;
-        this.tail = DEFAULT_TAIL;
     }
 
     @Override // O(1)
@@ -23,34 +18,51 @@ public class QueueImpl<E> implements Queue<E> {
         if (isFull()) {
             return false;
         }
-
-        if (tail == data.length - 1) {
-            tail = DEFAULT_TAIL;
+        // такая реализация для меня более интуитивно-понятная
+        if (size > 0) {
+            tail++;
+            if (tail == data.length) {
+                tail = 0;
+            }
         }
-
-        data[++tail] = value;
+        data[tail] = value;
         size++;
         return true;
     }
 
     @Override // O(1)
     public E remove() {
-        if (isEmpty()) {
+        if (size == 0) {
             return null;
         }
 
-        if (head == data.length) {
-            head = DEFAULT_HEAD;
-        }
-
-        E removedValue = data[head++];
+        E removedValue = data[head];
         size--;
+        if (size > 0) {
+            head++;
+            if (head == data.length) {
+                head = 0;
+            }
+        }
         return removedValue;
     }
 
     @Override
     public E peekHead() {
+        if (size == 0) {
+            return null;
+        }
+
         return data[head];
+    }
+
+    @Override
+    public E peekTail() {
+        if (size == 0) {
+            return null;
+        }
+
+        return data[tail];
     }
 
     @Override
