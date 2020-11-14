@@ -3,24 +3,32 @@ package ru.gb.zettro.ads.lesson6;
 import java.util.Stack;
 import java.util.function.Consumer;
 
-public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
+public class FixedDepthTreeImpl<E extends Comparable<? super E>> implements Tree<E> {
 
     private Node<E> root;
     private int size;
+    private final int maxDepth;
+
+    public FixedDepthTreeImpl(int maxDepth) {
+        if (maxDepth < 1) {
+            throw new IllegalArgumentException("Positive depth value should be provided!");
+        }
+        this.maxDepth = maxDepth;
+    }
 
     @Override
     public boolean add(E value) {
         Node<E> newNode = new Node<>(value);
 
         if (isEmpty()) {
-            this.root = newNode;
+            root = newNode;
             size++;
             return true;
         }
-
+        if (maxDepth == 1) return false;
         NodeAndParent nodeAndParent = doFind(value);
         Node<E> current = nodeAndParent.current;
-        if (current != null) {
+        if (current != null || nodeAndParent.level >= maxDepth) {
             return false;
         }
 
@@ -42,10 +50,10 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
     private NodeAndParent doFind(E value) {
         Node<E> previous = null;
         Node<E> current = root;
-
+        int currentLevel = 1;
         while (current != null) {
             if (current.getValue().equals(value)) {
-                return new NodeAndParent(current, previous);
+                return new NodeAndParent(current, previous, currentLevel);
             }
 
             previous = current;
@@ -54,9 +62,10 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
             } else {
                 current = current.getLeftChild();
             }
+            currentLevel++;
         }
 
-        return new NodeAndParent(null, previous);
+        return new NodeAndParent(null, previous, currentLevel);
     }
 
     @Override
@@ -77,8 +86,7 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
             } else {
                 parentNode.setLeftChild(null);
             }
-        }
-        else if (removedNode.hasOnlyOneChild()) {
+        } else if (removedNode.hasOnlyOneChild()) {
             Node<E> child = removedNode.getLeftChild() != null
                     ? removedNode.getLeftChild()
                     : removedNode.getRightChild();
@@ -90,13 +98,11 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
             } else {
                 parentNode.setLeftChild(child);
             }
-        }
-        else {
+        } else {
             Node<E> successor = getSuccessor(removedNode);
             if (removedNode == root) {
                 root = successor;
-            }
-            else if (parentNode.isRightChild(value)) {
+            } else if (parentNode.isRightChild(value)) {
                 parentNode.setRightChild(successor);
             } else {
                 parentNode.setLeftChild(successor);
@@ -148,11 +154,6 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
         }
     }
 
-    @Override
-    public boolean isBalanced() {
-        throw new RuntimeException("Method isBalanced() is not implemented yet");
-    }
-
     private void inOrder(Node<E> current, Consumer<E> action) {
         if (current == null) {
             return;
@@ -183,10 +184,12 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
     private class NodeAndParent {
         Node<E> current;
         Node<E> parent;
+        int level;
 
-        public NodeAndParent(Node<E> current, Node<E> parent) {
+        public NodeAndParent(Node<E> current, Node<E> parent, int level) {
             this.current = current;
             this.parent = parent;
+            this.level = level;
         }
     }
 
@@ -237,5 +240,21 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
         System.out.println("................................................................");
 
 
+    }
+
+    @Override
+    public boolean isBalanced() {
+        return isBalancedSubtree(root);
+    }
+
+    private boolean isBalancedSubtree(Node<E> node) {
+        return (node == null) ||
+                isBalancedSubtree(node.getLeftChild()) &&
+                        isBalancedSubtree(node.getRightChild()) &&
+                        Math.abs(height(node.getLeftChild()) - height(node.getRightChild())) <= 1;
+    }
+
+    private int height(Node<E> node) {
+        return node == null ? 0 : 1 + Math.max(height(node.getLeftChild()), height(node.getRightChild()));
     }
 }
