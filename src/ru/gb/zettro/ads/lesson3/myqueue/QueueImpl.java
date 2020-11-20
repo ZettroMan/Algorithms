@@ -56,14 +56,14 @@ public class QueueImpl<E> implements Queue<E> {
         return data[head];
     }
 
-    @Override
-    public E peekTail() {
-        if (size == 0) {
-            return null;
-        }
-
-        return data[tail];
-    }
+//    @Override
+//    public E peekTail() {
+//        if (size == 0) {
+//            return null;
+//        }
+//
+//        return data[tail];
+//    }
 
     @Override
     public int size() {

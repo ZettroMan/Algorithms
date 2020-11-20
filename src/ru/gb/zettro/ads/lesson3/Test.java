@@ -57,7 +57,6 @@ public class Test {
         System.out.println("Add value 4: " + queue.insert(4));
 
         System.out.println("Queue peek head: " + queue.peekHead());
-        System.out.println("Queue peek tail: " + queue.peekTail());
         System.out.println("Queue size: " + queue.size());
         System.out.println("Queue is full: " + queue.isFull());
 
@@ -82,7 +81,6 @@ public class Test {
         System.out.println("Add value 4 to Left: " + deque.insertLeft(100));
 
         System.out.println("Deque peek head: " + deque.peekHead());
-        System.out.println("Deque peek tail: " + deque.peekTail());
         System.out.println("Deque size: " + deque.size());
         System.out.println("Deque is full: " + deque.isFull());
 
