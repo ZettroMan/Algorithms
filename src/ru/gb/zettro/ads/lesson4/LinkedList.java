@@ -1,6 +1,8 @@
 package ru.gb.zettro.ads.lesson4;
 
-public interface LinkedList<E> {
+import java.util.Iterator;
+
+public interface LinkedList<E> extends Iterable<E> {
 
     /**
      * O(1)
@@ -37,6 +39,7 @@ public interface LinkedList<E> {
 
     E getFirst();
 
+    Iterator<E> iterator();
 
     class Node<E> {
         E item;
@@ -46,5 +49,7 @@ public interface LinkedList<E> {
             this.item = item;
             this.next = next;
         }
+
+//        public E getItem() { return item;}
     }
 }

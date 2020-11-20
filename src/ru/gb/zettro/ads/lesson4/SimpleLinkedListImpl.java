@@ -1,5 +1,8 @@
 package ru.gb.zettro.ads.lesson4;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 public class SimpleLinkedListImpl<E> implements LinkedList<E> {
 
     protected int size;
@@ -47,8 +50,7 @@ public class SimpleLinkedListImpl<E> implements LinkedList<E> {
 
         if (current == firstElement) {
             firstElement = firstElement.next;
-        }
-        else {
+        } else {
             previous.next = current.next;
         }
 
@@ -96,5 +98,55 @@ public class SimpleLinkedListImpl<E> implements LinkedList<E> {
     @Override
     public E getFirst() {
         return firstElement.item;
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new Itr();
+    }
+
+    private class Itr implements Iterator<E> {
+        private Node<E> cursor;
+        private Node<E> lastReturned;
+        private Node<E> prevToReturned;
+
+        Itr() {
+            cursor = firstElement;
+            lastReturned = null;
+            prevToReturned = null;
+        }
+
+        public boolean hasNext() {
+            return cursor != null;
+        }
+
+       // @SuppressWarnings("unchecked")
+        public E next() {
+            if (cursor == null)
+                throw new NoSuchElementException();
+            E elementData = cursor.item;
+            if(lastReturned != null) {
+                prevToReturned = lastReturned;
+            }
+            lastReturned = cursor;
+            cursor = cursor.next;
+            return elementData;
+        }
+
+        public void remove() {
+            if (lastReturned == null)
+                throw new IllegalStateException();
+
+            // assert prevToReturned == null only when first element is just returned, otherwise - should be not null
+            if (prevToReturned == null) {
+                firstElement.next = null;
+                firstElement = cursor;
+            } else {
+                prevToReturned.next = cursor;
+                lastReturned.next = null;
+            }
+            lastReturned = null;
+        }
+
     }
 }

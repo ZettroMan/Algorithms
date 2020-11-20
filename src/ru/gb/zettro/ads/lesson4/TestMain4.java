@@ -3,8 +3,7 @@ package ru.gb.zettro.ads.lesson4;
 import ru.gb.zettro.ads.lesson3.myqueue.Queue;
 import ru.gb.zettro.ads.lesson3.mystack.Stack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 public class TestMain4 {
 
@@ -16,27 +15,40 @@ public class TestMain4 {
     }
 
     private static void testForEach() {
-        List<Integer> arrayList = new ArrayList<>();
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(3);
-        arrayList.add(4);
-
-        for (Integer integer : arrayList) {
-            System.out.println(integer);
-        }
 
         LinkedList<Integer> linkedList = new SimpleLinkedListImpl<>();
         linkedList.insertFirst(1);
         linkedList.insertFirst(2);
         linkedList.insertFirst(3);
         linkedList.insertFirst(4);
+        linkedList.insertFirst(5);
+        linkedList.insertFirst(6);
+        linkedList.insertFirst(7);
+        linkedList.insertFirst(8);
+        linkedList.insertFirst(9);
+        linkedList.insertFirst(10);
+        linkedList.insertFirst(11);
+        linkedList.insertFirst(12);
+        linkedList.insertFirst(13);
 
         linkedList.display();
 
-//        for(Integer value: linkedList) {
-//            System.out.println(value);
-//        }
+        System.out.println("\nAnd now let's display all the list content via foreach:");
+        for(Integer value: linkedList) {
+            System.out.println(value);
+        }
+
+        System.out.println("\nLet's go through the list via iterator and remove each third element:");
+        int i = 1;
+        Iterator<Integer> listIterator = linkedList.iterator();
+        while(listIterator.hasNext()) {
+            listIterator.next();
+            if ((i++) % 3 == 0) {
+                listIterator.remove();
+            }
+        }
+        linkedList.display();
+
     }
 
     private static void testLinkedList() {
