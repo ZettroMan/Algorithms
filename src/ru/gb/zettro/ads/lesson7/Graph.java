@@ -136,20 +136,21 @@ public class Graph {
     }
 
     private void visitVertex(Vertex from, Vertex vertex, Stack<Vertex> stack) {
-        System.out.println(vertex);
+//        System.out.println(vertex);
         stack.push(vertex);
         vertex.setVisitedFrom(from);
     }
 
     private void visitVertex(Vertex from, Vertex vertex, Queue<Vertex> queue) {
-        System.out.println(vertex);
+//        System.out.println(vertex);
         queue.add(vertex);
         vertex.setVisitedFrom(from);
     }
 
-    public void showShortestPath(String startLabel, String finishLabel) {
+    public Stack<String> getShortestPath(String startLabel, String finishLabel) {
         int startIndex = indexOf(startLabel);
         int finishIndex = indexOf(finishLabel);
+        Stack<String> resultStack = new Stack<>();
 
         if (startIndex == -1) {
             throw new IllegalArgumentException("Invalid start label");
@@ -167,14 +168,13 @@ public class Graph {
             vertex = getNearUnvisitedVertex(currentVertex);
             if (vertex != null) {
                 if (finishLabel.equals(vertex.getLabel())) {
-                    System.out.println("===========================================\nThe shortest path is:");
-                    System.out.println(finishLabel);
+                    resultStack.push(finishLabel);
                     while (true) {
-                        System.out.println(currentVertex.getLabel());
+                        resultStack.push(currentVertex.getLabel());
                         if(currentVertex == currentVertex.getVisitedFrom()) break;
                         currentVertex = currentVertex.getVisitedFrom();
                     }
-                    return;
+                    return resultStack;
                 }
                 visitVertex(currentVertex, vertex, queue);
             } else {
@@ -183,6 +183,7 @@ public class Graph {
         }
 
         resetVertexState();
+        return resultStack;
 
     }
 }

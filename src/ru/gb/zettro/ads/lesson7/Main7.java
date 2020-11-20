@@ -1,5 +1,7 @@
 package ru.gb.zettro.ads.lesson7;
 
+import java.util.Stack;
+
 public class Main7 {
 
     public static void main(String[] args) {
@@ -29,10 +31,28 @@ public class Main7 {
         graph.addEdges("Тамбов", "Саратов");
         graph.addEdges("Орел", "Курск");
         graph.addEdges("Воронеж", "Липецк", "Саратов", "Курск");
-        graph.display();
+       // graph.display();
 
-        graph.showShortestPath("Москва", "Воронеж");
+        Stack<String> shortestPath = graph.getShortestPath("Москва", "Воронеж");
+        System.out.println("================================================================");
+        if (shortestPath.empty()) {
+            System.out.println("Path is not found!");
+        } else {
+            System.out.println("The shortest path is:");
+            displayPath(shortestPath);
+        }
+    }
 
+    private static void displayPath(Stack<String> path) {
+        if (path.isEmpty()) {
+            return;
+        }
+        while (true) {
+            System.out.print(path.pop());
+            if (!path.isEmpty()) {
+                System.out.print(" --> ");
+            } else break;
+        }
     }
 
 
