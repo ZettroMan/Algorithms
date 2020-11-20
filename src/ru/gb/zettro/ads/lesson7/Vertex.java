@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Vertex {
 
     private final String label;
-    private boolean visited;
+    private Vertex visitedFrom = null;
 
     public Vertex(String label) {
         this.label = label;
@@ -35,11 +35,13 @@ public class Vertex {
         return Objects.hash(label);
     }
 
-    public void setVisited(boolean visited) {
-        this.visited = visited;
+    public void setVisitedFrom(Vertex fromVertex) {
+        visitedFrom = fromVertex;
     }
 
-    public boolean getVisited() {
-        return visited;
+    public Vertex getVisitedFrom() {
+        return visitedFrom;
     }
+
+    public boolean isVisited() { return visitedFrom != null;}
 }
