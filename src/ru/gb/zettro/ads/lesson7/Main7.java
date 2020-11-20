@@ -33,7 +33,10 @@ public class Main7 {
         graph.addEdges("Воронеж", "Липецк", "Саратов", "Курск");
        // graph.display();
 
-        Stack<String> shortestPath = graph.getShortestPath("Москва", "Воронеж");
+//        Stack<String> shortestPath = graph.getShortestPath("Москва", "Воронеж");
+//        Stack<String> shortestPath = graph.getShortestPath("Москва", "Саратов");
+//        Stack<String> shortestPath = graph.getShortestPath("Липецк", "Тамбов");
+        Stack<String> shortestPath = graph.getShortestPath("Рязань", "Курск");
         System.out.println("================================================================");
         if (shortestPath.empty()) {
             System.out.println("Path is not found!");
