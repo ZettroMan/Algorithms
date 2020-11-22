@@ -38,7 +38,7 @@ public class Graph {
     private int indexOf(String vertexLabel) {
         for (int i = 0; i < vertexList.size(); i++) {
             if (vertexLabel.equals(vertexList.get(i).getLabel())) {
-                return  i;
+                return i;
             }
         }
         return -1;
@@ -76,13 +76,13 @@ public class Graph {
 
         Vertex vertex = vertexList.get(startIndex);
 
-        visitVertex(vertex, stack);
+        visitVertex(vertex, vertex, stack);
         while (!stack.isEmpty()) {
-            vertex = getNearUnvisitedVertex(stack.peek());
+            Vertex currentVertex = stack.peek();
+            vertex = getNearUnvisitedVertex(currentVertex);
             if (vertex != null) {
-                visitVertex(vertex, stack);
-            }
-            else {
+                visitVertex(currentVertex, vertex, stack);
+            } else {
                 stack.pop();
             }
         }
@@ -105,13 +105,13 @@ public class Graph {
 
         Vertex vertex = vertexList.get(startIndex);
 
-        visitVertex(vertex, queue);
+        visitVertex(vertex, vertex, queue);
         while (!queue.isEmpty()) {
-            vertex = getNearUnvisitedVertex(queue.peek());
+            Vertex currentVertex = queue.peek();
+            vertex = getNearUnvisitedVertex(currentVertex);
             if (vertex != null) {
-                visitVertex(vertex, queue);
-            }
-            else {
+                visitVertex(currentVertex, vertex, queue);
+            } else {
                 queue.remove();
             }
         }
@@ -121,28 +121,69 @@ public class Graph {
 
     private void resetVertexState() {
         for (Vertex vertex : vertexList) {
-            vertex.setVisited(false);
+            vertex.setVisitedFrom(null);
         }
     }
 
     private Vertex getNearUnvisitedVertex(Vertex peek) {
         int peekIndex = vertexList.indexOf(peek);
         for (int i = 0; i < getVertexSize(); i++) {
-            if (adjMat[peekIndex][i] && !vertexList.get(i).getVisited()) {
+            if (adjMat[peekIndex][i] && !vertexList.get(i).isVisited()) {
                 return vertexList.get(i);
             }
         }
         return null;
     }
 
-    private void visitVertex(Vertex vertex, Stack<Vertex> stack) {
-        System.out.println(vertex);
+    private void visitVertex(Vertex from, Vertex vertex, Stack<Vertex> stack) {
+//        System.out.println(vertex);
         stack.push(vertex);
-        vertex.setVisited(true);
+        vertex.setVisitedFrom(from);
     }
-    private void visitVertex(Vertex vertex, Queue<Vertex> queue) {
-        System.out.println(vertex);
+
+    private void visitVertex(Vertex from, Vertex vertex, Queue<Vertex> queue) {
+//        System.out.println(vertex);
         queue.add(vertex);
-        vertex.setVisited(true);
+        vertex.setVisitedFrom(from);
+    }
+
+    public Stack<String> getShortestPath(String startLabel, String finishLabel) {
+        int startIndex = indexOf(startLabel);
+        int finishIndex = indexOf(finishLabel);
+        Stack<String> resultStack = new Stack<>();
+
+        if (startIndex == -1) {
+            throw new IllegalArgumentException("Invalid start label");
+        }
+        if (finishIndex == -1) {
+            throw new IllegalArgumentException("Invalid finish label");
+        }
+
+        Queue<Vertex> queue = new LinkedList<>();
+        Vertex vertex = vertexList.get(startIndex);
+
+        visitVertex(vertex, vertex, queue);
+        while (!queue.isEmpty()) {
+            Vertex currentVertex = queue.peek();
+            vertex = getNearUnvisitedVertex(currentVertex);
+            if (vertex != null) {
+                if (finishLabel.equals(vertex.getLabel())) {
+                    resultStack.push(finishLabel);
+                    while (true) {
+                        resultStack.push(currentVertex.getLabel());
+                        if(currentVertex == currentVertex.getVisitedFrom()) break;
+                        currentVertex = currentVertex.getVisitedFrom();
+                    }
+                    return resultStack;
+                }
+                visitVertex(currentVertex, vertex, queue);
+            } else {
+                queue.remove();
+            }
+        }
+
+        resetVertexState();
+        return resultStack;
+
     }
 }

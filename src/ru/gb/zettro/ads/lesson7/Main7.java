@@ -1,12 +1,63 @@
 package ru.gb.zettro.ads.lesson7;
 
+import java.util.Stack;
+
 public class Main7 {
 
     public static void main(String[] args) {
 //        testGraph();
 //        testDfs();
-        testBfs();
+//        testBfs();
+        testShortestPath();
     }
+
+    private static void testShortestPath() {
+        Graph graph = new Graph(10);
+        graph.addVertex("Москва");
+        graph.addVertex("Тула");
+        graph.addVertex("Рязань");
+        graph.addVertex("Калуга");
+        graph.addVertex("Липецк");
+        graph.addVertex("Тамбов");
+        graph.addVertex("Орел");
+        graph.addVertex("Саратов");
+        graph.addVertex("Курск");
+        graph.addVertex("Воронеж");
+
+        graph.addEdges("Москва", "Тула", "Рязань", "Калуга");
+        graph.addEdges("Тула", "Липецк");
+        graph.addEdges("Рязань", "Тамбов");
+        graph.addEdges("Калуга", "Орел");
+        graph.addEdges("Тамбов", "Саратов");
+        graph.addEdges("Орел", "Курск");
+        graph.addEdges("Воронеж", "Липецк", "Саратов", "Курск");
+       // graph.display();
+
+//        Stack<String> shortestPath = graph.getShortestPath("Москва", "Воронеж");
+//        Stack<String> shortestPath = graph.getShortestPath("Москва", "Саратов");
+//        Stack<String> shortestPath = graph.getShortestPath("Липецк", "Тамбов");
+        Stack<String> shortestPath = graph.getShortestPath("Рязань", "Курск");
+        System.out.println("================================================================");
+        if (shortestPath.empty()) {
+            System.out.println("Path is not found!");
+        } else {
+            System.out.println("The shortest path is:");
+            displayPath(shortestPath);
+        }
+    }
+
+    private static void displayPath(Stack<String> path) {
+        if (path.isEmpty()) {
+            return;
+        }
+        while (true) {
+            System.out.print(path.pop());
+            if (!path.isEmpty()) {
+                System.out.print(" --> ");
+            } else break;
+        }
+    }
+
 
     private static void testGraph() {
         Graph graph = new Graph(4);
